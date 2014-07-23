@@ -10,17 +10,17 @@ def load_data(filename):
   time = [dt.datetime.fromtimestamp(ts) for ts in data[:,0]]
   return time, data[:,1]
 
-rhrk_time, rhrk_freq = load_data("rhrk-frequenz.txt")
-foo_time, foo_freq = load_data("foofrequenz.txt")
-plt.title("Netzfrequenz: RHRK vs. Foo")
+rhrk_time, rhrk_freq = load_data("datasets/rhrk-vergleichsfrequenz.txt")
+defluxio_time, defluxio_freq = load_data("datasets/defluxio-vergleichsfrequenz.txt")
+plt.title("Netzfrequenz: Janitza 604E vs. Defluxio")
 plt.xlabel("Zeit")
 plt.ylabel("Frequenz [Hz]")
-plt.plot(rhrk_time, rhrk_freq, 'r', label="RHRK")
-plt.plot(foo_time, foo_freq, 'b', label="Foo")
+plt.plot(rhrk_time, rhrk_freq, 'r', label="Janitza")
+plt.plot(defluxio_time, defluxio_freq, 'b', label="Defluxio")
 plt.legend()
 
-print "Mittelwert RHRK:", np.mean(rhrk_freq)
-print "Mittelwert Foo:", np.mean(foo_freq)
+print "Mittelwert Janitza:", np.mean(rhrk_freq)
+print "Mittelwert Defluxio:", np.mean(defluxio_freq)
 
 #plt.figure()
 #lastweek_time, lastweek_freq = load_data("lastweek-frequenz.txt")
