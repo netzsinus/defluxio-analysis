@@ -28,7 +28,10 @@ def load_data_as_dataframe(filename):
   retval['date'] = [c.date() for c in retval['ts']]
   retval['time'] = [c.time() for c in retval['ts']]
   min_ts = np.min(retval['ts'])
-  retval['d_since_start'] = [np.timedelta64(c, 'D').astype(int) for c in retval['ts'] - min_ts]
+  #retval['d_since_start'] = [np.timedelta64(c, 'D').astype(int) for c in retval['ts'] - min_ts]
+  min_unix = np.min(retval['unix'])
+  #TODO: Skalierung ist kaputt. Siehe debug-output.
+  retval['d_since_start'] = ((retval['unix'] - min_unix) / (60*60*24)).astype(int)
   retval['s_since_midnight'] = [ c % (60*60*24) for c in retval['unix'] ]
   return retval
 
@@ -40,12 +43,14 @@ def seconds_to_timeofday(seconds):
   retval = d.strftime("%H:%M")
   return retval
 
-datasetfile = "datasets/20140718-export.txt"
+datasetfile = "datasets/20140723-export.txt"
 print "loading ", datasetfile
 df = load_data_as_dataframe(datasetfile)
-#print df.tail()
+print df.head()
 min_day=np.min(df['d_since_start'])
 max_day=np.max(df['d_since_start'])
+print "Min day:", min_day
+print "Max day:", max_day
 minfreq = np.min(df['freq'])
 maxfreq = np.max(df['freq'])
 print "preparing data matrix"
@@ -53,6 +58,7 @@ datamatrix=np.zeros(( max_day-min_day+1, 24*60*60))
 for i in range(len(df['freq'])):
   x = df['d_since_start'][i]
   y = df['s_since_midnight'][i]
+  print i, x, y
   datamatrix[x, y] = df['freq'][i]
 color_map = plt.cm.Spectral_r
 print "plotting."
@@ -66,12 +72,12 @@ cbar = plt.colorbar(p, spacing='log', ticks=freqticks)
 cbar.ax.set_yticklabels(ticklabels)
 cbar.set_label("Frequenz")
 plt.xlim(0, 24*60*60)
-plt.ylim(0, max_day-min_day)
+#plt.ylim(0, max_day-min_day)
 xlocs = np.arange(0, 24*60*60, 2*60*60)
 xlocs, xlabels = plt.xticks(xlocs, 
     map(lambda x: seconds_to_timeofday(x), xlocs))
 plt.setp(xlabels, rotation=45)
-ylocs = np.arange(0, max_day - min_day, 1)
+ylocs = np.arange(min_day, max_day+1, 1)
 ylocs, ylabels = plt.yticks(ylocs, 
     map(lambda y: y, ylocs),
     verticalalignment = 'bottom')
