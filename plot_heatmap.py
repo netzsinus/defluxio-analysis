@@ -8,6 +8,7 @@ from matplotlib.colors import LogNorm
 import numpy as np
 import datetime as dt
 import pandas as pd
+import brewer2mpl as b2m
 
 def load_data_as_series(filename):
   datafile = open(filename)
@@ -31,7 +32,9 @@ def load_data_as_dataframe(filename):
   #retval['d_since_start'] = [np.timedelta64(c, 'D').astype(int) for c in retval['ts'] - min_ts]
   min_unix = np.min(retval['unix'])
   #TODO: Skalierung ist kaputt. Siehe debug-output.
-  retval['d_since_start'] = ((retval['unix'] - min_unix) / (60*60*24)).astype(int)
+  daystart_offset = min_unix % (60*60*24)
+  retval['d_since_start'] = ((retval['unix'] - (min_unix -
+    daystart_offset) ) / (60*60*24)).astype(int)
   retval['s_since_midnight'] = [ c % (60*60*24) for c in retval['unix'] ]
   return retval
 
@@ -54,13 +57,15 @@ print "Max day:", max_day
 minfreq = np.min(df['freq'])
 maxfreq = np.max(df['freq'])
 print "preparing data matrix"
-datamatrix=np.zeros(( max_day-min_day+1, 24*60*60))
+datamatrix=np.zeros((24*60*60, max_day-min_day+1))
 for i in range(len(df['freq'])):
   x = df['d_since_start'][i]
   y = df['s_since_midnight'][i]
-  print i, x, y
-  datamatrix[x, y] = df['freq'][i]
-color_map = plt.cm.Spectral_r
+  #print i, x, y
+  datamatrix[y, x] = df['freq'][i]
+#color_map = plt.cm.Spectral_r
+color_map = b2m.brewer2mpl.get_map("Spectral", "Diverging",
+    11).mpl_colormap
 print "plotting."
 p=plt.pcolormesh(datamatrix, 
     cmap=color_map,
@@ -71,16 +76,16 @@ ticklabels = ["%.3f" % s for s in freqticks]
 cbar = plt.colorbar(p, spacing='log', ticks=freqticks)
 cbar.ax.set_yticklabels(ticklabels)
 cbar.set_label("Frequenz")
-plt.xlim(0, 24*60*60)
-#plt.ylim(0, max_day-min_day)
-xlocs = np.arange(0, 24*60*60, 2*60*60)
-xlocs, xlabels = plt.xticks(xlocs, 
-    map(lambda x: seconds_to_timeofday(x), xlocs))
-plt.setp(xlabels, rotation=45)
-ylocs = np.arange(min_day, max_day+1, 1)
+plt.ylim(0, 24*60*60)
+#plt.xlim(0, max_day-min_day)
+ylocs = np.arange(0, 24*60*60, 2*60*60)
 ylocs, ylabels = plt.yticks(ylocs, 
-    map(lambda y: y, ylocs),
-    verticalalignment = 'bottom')
-plt.xlabel("Uhrzeit")
-plt.ylabel("Tag")
+    map(lambda y: seconds_to_timeofday(y), ylocs))
+xlocs = np.arange(min_day, max_day+1, 1)
+xlocs, xlabels = plt.xticks(xlocs,
+    map(lambda x: x, xlocs))
+    #verticalalignment = 'bottom')
+#plt.setp(xlabels, rotation=45)
+plt.ylabel("Uhrzeit (UTC)")
+plt.xlabel("Tag")
 plt.savefig("images/freq-heatmap.png", bbox_inches='tight')
