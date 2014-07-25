@@ -1,6 +1,8 @@
 # vim:fileencoding=utf-8
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.stats import norm
+from scipy.stats import ks_2samp
 import freqanalysis.datatools as datatool
 import freqanalysis.normdist as nd
 
@@ -19,5 +21,16 @@ nd.plot_fit(hour_df['freq'].values, ax2, "Nur Stundenwechsel:")
 
 f.savefig("images/normdistrib.png", bbox_inches='tight')
 
+print "Executing KS-Test: is the data normally distributed?"
+mu, std = norm.fit(df['freq'])
+refdist = np.random.normal(mu, std, 10000)
+D, p_value = ks_2samp(df['freq'].values, refdist)
+
+if p_value < 0.01:
+  print "Rejecting null hypothesis - the two distributions differ significantly. p = %.4f" % p_value
+  ks_comment = "KS: p=%.4f, H0 rejected" % p_value
+else:
+  print "Accepting null hypothesis - the two distributions are the same. p = %.4f" % p_value
+  ks_comment = "KS: p=%.4f, H0 accepted" % p_value
 
 
