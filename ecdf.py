@@ -3,24 +3,38 @@ import matplotlib.pyplot as plt
 import numpy as np
 import freqanalysis.ecdf as ecdf
 import freqanalysis.datatools as datatool
+from scipy.stats import ks_2samp
 
 
 
 datasetfile = "datasets/20140723-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
-print df.head()
-print "Calculating ECDF"
-# todo: filter ECDF based on time (mid-hour vs. hour-change)
-# see http://stackoverflow.com/questions/11869910/pandas-filter-rows-of-dataframe-with-operator-chaining
-# df['time'].minute > 55 | df['time'].minute < 5
-all_sorted_series, yvals = ecdf.get_ecdf(df['freq'])
+print "Calculating ECDF of all values"
+all_series, yvals = ecdf.get_ecdf(df['freq'])
 print "Plotting graph"
-plt.plot(sorted_series, yvals, c="b", label="Netzfrequenz")
-plt.legend(loc="lower right")
-plt.title(u"Vergleich der Frequenzgänge")
-#plt.xscale('log')
-plt.xlabel('Frequenz [Hz]')
-plt.ylabel(u'ECDF')
-plt.savefig("images/ecdf.png", bbox_inches='tight')
+ecdf.plot_ecdf_curve(all_series, yvals, color="b", label="Alle Werte")
 
+df['minute'] = df.time.apply(lambda x: x.minute)
+
+hour_df = df[(df.minute >= 58) | (df.minute <= 3)]
+hour_series, yvals = ecdf.get_ecdf(hour_df['freq'])
+ecdf.plot_ecdf_curve(hour_series, yvals, color="r",
+    label="Stundenwechsel")
+
+not_hour_df = df[(df.minute < 58 ) | (df.minute > 3)]
+not_hour_series, yvals = ecdf.get_ecdf(not_hour_df['freq'])
+ecdf.plot_ecdf_curve(not_hour_series, yvals, color="y", linestyle="--",
+    label="unter der Stunde")
+print "Null hypothesis: the two samples are drawn from the same continuous distribution."
+
+D, p_value = ks_2samp(all_series, hour_series)
+if p_value < 0.01:
+  print "Rejecting null hypothesis - the two distributions differ significantly. p = %.4f" % p_value
+  ks_comment = "KS: p=%.4f, H0 rejected" % p_value
+else:
+  print "Accepting null hypothesis - the two distributions are the same. p = %.4f" % p_value
+  ks_comment = "KS: p=%.4f, H0 accepted" % p_value
+
+plt.title(u"Vergleich der Netzfrequenz, %s" % ks_comment)
+plt.savefig("images/ecdf.png", bbox_inches='tight')
