@@ -33,11 +33,8 @@ axarr[0].plot(diotime, diofreq, 'b', label="Defluxio")
 axarr[0].plot(axarr[0].get_xlim(), (lower_freq_limit, lower_freq_limit), 'r-')
 axarr[0].plot(axarr[0].get_xlim(), (upper_freq_limit, upper_freq_limit), 'r-')
 
-# plot over/underfrequency colorband
-# see broken_barh example
-
 # the histogram of the data
-n, bins, patches = axarr[1].hist(diofreq, 50, normed=1, facecolor='green', alpha=0.75)
+n, bins, patches = axarr[1].hist(diofreq, 100, normed=1, facecolor='green', alpha=0.75)
 # add a 'best fit' line
 y = mlab.normpdf( bins, mu, sigma)
 l = axarr[1].plot(bins, y, 'r--', linewidth=1)
@@ -66,6 +63,6 @@ axarr[1].grid(True)
 #plt.plot(lastweek_time, lastweek_freq, 'b', label="Letzte Woche (ITWM)")
 #plt.legend()
 
+plt.tight_layout()
+plt.savefig("images/frequenzverlauf.png", bbox_inches='tight')
 
-
-plt.show()
