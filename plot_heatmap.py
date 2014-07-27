@@ -11,14 +11,6 @@ import pandas as pd
 import brewer2mpl as b2m
 import freqanalysis.datatools as datatool
 
-# Helper: convert seconds of day to HH:MM formatted string
-def seconds_to_timeofday(seconds):
-  hours = seconds/(60*60)
-  sec=dt.timedelta(hours=hours)
-  d=dt.datetime(2000,1,1) + sec
-  retval = d.strftime("%H:%M")
-  return retval
-
 datasetfile = "datasets/20140723-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
@@ -53,7 +45,7 @@ plt.ylim(0, 24*60*60)
 #plt.xlim(0, max_day-min_day)
 ylocs = np.arange(0, 24*60*60, 2*60*60)
 ylocs, ylabels = plt.yticks(ylocs, 
-    map(lambda y: seconds_to_timeofday(y), ylocs))
+    map(lambda y: datatool.seconds_to_timeofday(y), ylocs))
 xlocs = np.arange(min_day, max_day+1, 1)
 xlocs, xlabels = plt.xticks(xlocs,
     map(lambda x: x, xlocs))

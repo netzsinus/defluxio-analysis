@@ -32,4 +32,12 @@ def load_data_as_dataframe(filename):
   retval['s_since_midnight'] = [ c % (60*60*24) for c in retval['unix'] ]
   return retval
 
+# Helper: convert seconds of day to HH:MM formatted string
+def seconds_to_timeofday(seconds):
+  hours = seconds/(60*60)
+  sec=dt.timedelta(hours=hours)
+  d=dt.datetime(2000,1,1) + sec
+  retval = d.strftime("%H:%M")
+  return retval
+
 
