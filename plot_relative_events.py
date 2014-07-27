@@ -20,18 +20,19 @@ print "Using window of size", window_num_seconds, "seconds"
 min_ts = np.min(df['unix'])
 max_ts = np.max(df['unix'])
 half_window_size = window_num_seconds/2
+quarter_window_size = window_num_seconds/4
 
-
+event_id = 0
 for i in np.arange(min_ts + half_window_size, max_ts - half_window_size,
-    half_window_size):
+    quarter_window_size):
   window = df[(df.unix >= i-half_window_size) & (df.unix <
     i+half_window_size)]
   max_deviation = np.max(window['freq']) - np.min(window['freq'])
   if max_deviation > (rel_deviation_Hz):
-    fulldatestring = dt.datetime.fromtimestamp(i).strftime('%d.%m.%Y, %H:%M')
-    datestring = dt.datetime.fromtimestamp(i).strftime('%Y-%m-%d')
+    fulldatestring = "%s %s (UTC)" % (datatool.seconds_to_date(i),
+        datatool.seconds_to_timeofday(i))
     title_string = "%s: %.3f Hz" % (fulldatestring, max_deviation)
-    file_string = "%s - %f" % (datestring, max_deviation)
+    file_string = "(%d) - %s - %f" % (event_id, datatool.seconds_to_date(i), max_deviation)
     print "Found deviation: ", title_string
     plt.clf()
     plt.title("%s" % title_string)
@@ -44,6 +45,7 @@ for i in np.arange(min_ts + half_window_size, max_ts - half_window_size,
         map(lambda x: datatool.seconds_to_timeofday(x), xlocs))
     plt.setp(xlabels, rotation=45)
     plt.savefig("images/events/%s.png" % file_string, bbox_inches='tight')
+    event_id = event_id + 1
 
 
 

@@ -1,6 +1,8 @@
 import numpy as np
 import datetime as dt
+import time as t
 import pandas as pd
+import pytz
 
 def load_data_as_series(filename):
   datafile = open(filename)
@@ -33,11 +35,11 @@ def load_data_as_dataframe(filename):
   return retval
 
 # Helper: convert seconds of day to HH:MM formatted string
-def seconds_to_timeofday(seconds):
-  hours = seconds/(60*60)
-  sec=dt.timedelta(hours=hours)
-  d=dt.datetime(2000,1,1) + sec
-  retval = d.strftime("%H:%M")
-  return retval
+def seconds_to_timeofday(timestamp):
+  localized = pytz.utc.localize(dt.datetime.fromtimestamp(timestamp))
+  return localized.strftime('%H:%M')
 
+def seconds_to_date(timestamp):
+  localized = pytz.utc.localize(dt.datetime.fromtimestamp(timestamp))
+  return localized.strftime('%d.%m.%Y')
 
