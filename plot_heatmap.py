@@ -42,7 +42,7 @@ cbar = plt.colorbar(p, spacing='log', ticks=freqticks)
 cbar.ax.set_yticklabels(ticklabels)
 cbar.set_label("Frequenz")
 plt.ylim(0, 24*60*60)
-ylocs = np.arange(0, 24*60*60, 2*60*60)
+ylocs = np.arange(0, 24*60*60, 60*60)
 ylocs, ylabels = plt.yticks(ylocs, 
     map(lambda y: datatool.seconds_to_timeofday(y), ylocs))
 xlocs = np.arange(min_day, max_day+1, 1)

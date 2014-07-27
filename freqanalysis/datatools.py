@@ -18,7 +18,8 @@ def load_data_as_dataframe(filename):
   #data[:,0] = pd.to_datetime(data[:,0])
   #time = [dt.datetime.fromtimestamp(ts) for ts in data[:,0]]
   retval = pd.DataFrame(data, columns = ['unix', 'freq'])
-  retval['ts'] = pd.to_datetime(retval['unix'].astype(int), unit='s')
+  retval['ts'] = pd.to_datetime(retval['unix'].astype(int), unit='s',
+      utc=True)
   retval['freq'] = retval['freq'].astype(float)
   retval['date'] = [c.date() for c in retval['ts']]
   retval['time'] = [c.time() for c in retval['ts']]
