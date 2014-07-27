@@ -13,8 +13,8 @@ datasetfile = "datasets/20140723-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
 df['minute'] = df.time.apply(lambda x: x.minute)
-hour_df = df[(df.minute >= 58) | (df.minute <= 3)]
-not_hour_df = df[(df.minute < 58) & (df.minute > 3)]
+hour_df = df[(df.minute >= 58) | (df.minute <= 5)]
+not_hour_df = df[(df.minute < 58) & (df.minute > 5)]
 
 f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
 # pandas/matplotlib incompatibility: http://stackoverflow.com/a/22764377

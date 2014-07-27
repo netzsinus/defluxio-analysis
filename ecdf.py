@@ -17,12 +17,12 @@ ecdf.plot_ecdf_curve(all_series, yvals, color="b", label="Alle Werte")
 
 df['minute'] = df.time.apply(lambda x: x.minute)
 
-hour_df = df[(df.minute >= 58) | (df.minute <= 3)]
+hour_df = df[(df.minute >= 58) | (df.minute <= 5)]
 hour_series, yvals = ecdf.get_ecdf(hour_df['freq'])
 ecdf.plot_ecdf_curve(hour_series, yvals, color="r",
     label="Stundenwechsel")
 
-not_hour_df = df[(df.minute < 58 ) & (df.minute > 3)]
+not_hour_df = df[(df.minute < 58 ) & (df.minute > 5)]
 not_hour_series, yvals = ecdf.get_ecdf(not_hour_df['freq'])
 ecdf.plot_ecdf_curve(not_hour_series, yvals, color="y", linestyle="-",
     label="unter der Stunde")

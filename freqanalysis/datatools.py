@@ -20,6 +20,8 @@ def load_data_as_dataframe(filename):
   retval['freq'] = retval['freq'].astype(float)
   retval['date'] = [c.date() for c in retval['ts']]
   retval['time'] = [c.time() for c in retval['ts']]
+  retval['hour'] = retval.time.apply(lambda x: x.hour)
+  retval['minute'] = retval.time.apply(lambda y: y.minute)
   min_ts = np.min(retval['ts'])
   #retval['d_since_start'] = [np.timedelta64(c, 'D').astype(int) for c in retval['ts'] - min_ts]
   min_unix = np.min(retval['unix'])
