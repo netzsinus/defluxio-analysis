@@ -11,7 +11,7 @@ import pandas as pd
 import brewer2mpl as b2m
 import freqanalysis.datatools as datatool
 
-datasetfile = "datasets/20140723-export.txt"
+datasetfile = "datasets/20140728-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
 print df.head()
