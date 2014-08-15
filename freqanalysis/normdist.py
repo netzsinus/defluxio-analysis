@@ -14,5 +14,5 @@ def plot_fit(data, ax, prefix):
   x = np.linspace(mindata, maxdata, 100)
   p = norm.pdf(x, mu, std)
   ax.plot(x, p, 'k', linewidth=2)
-  title = r"$\mathrm{%s:}\ \mu = %.2f, \sigma = %.2f, n = %d$" % (prefix, mu, std, len(data))
+  title = r"$\mathrm{%s:}\ \mu = %.4f, \sigma = %.4f, n = %d$" % (prefix, mu, std, len(data))
   ax.set_title(title)

@@ -9,7 +9,7 @@ import freqanalysis.normdist as nd
 
 
 
-datasetfile = "datasets/20140728-export.txt"
+datasetfile = "datasets/20140815-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
 df['minute'] = df.time.apply(lambda x: x.minute)
@@ -36,13 +36,13 @@ else:
   print "Accepting null hypothesis - the two distributions are the same. p = %.4f" % p_value
   ks_comment = "KS: p=%.4f, H0 accepted (alpha=0.01)" % p_value
 
-print
-print "Executing D'Agostino, 'An omnibus test of normality for moderate and large sample size', Biometrika, 58, 341-348"
-k2, p_value = normaltest(df['freq'])
-if p_value < 0.01:
-  print "Rejecting null hypothesis - the dataset is not normally distributed. p = %.4f" % p_value
-  omnibus_comment = "Omnibus: p=%.4f, H0 rejected (alpha=0.01)" % p_value
-else:
-  print "Accepting null hypothesis - the dataset is normally distributed. p = %.4f" % p_value
-  omnibus_comment = "Omnibus: p=%.4f, H0 accepted (alpha=0.01)" % p_value
-
+#print
+#print "Executing D'Agostino, 'An omnibus test of normality for moderate and large sample size', Biometrika, 58, 341-348"
+#k2, p_value = normaltest(df['freq'])
+#if p_value < 0.01:
+#  print "Rejecting null hypothesis - the dataset is not normally distributed. p = %.4f" % p_value
+#  omnibus_comment = "Omnibus: p=%.4f, H0 rejected (alpha=0.01)" % p_value
+#else:
+#  print "Accepting null hypothesis - the dataset is normally distributed. p = %.4f" % p_value
+#  omnibus_comment = "Omnibus: p=%.4f, H0 accepted (alpha=0.01)" % p_value
+#

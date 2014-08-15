@@ -12,8 +12,8 @@ def load_data(filename):
   time = [dt.datetime.fromtimestamp(ts) for ts in data[:,0]]
   return time, data[:,1]
 
-datasetfile = "datasets/20140728-export.txt"
-#datasetfile = "datasets/20140718-export.txt"
+#datasetfile = "datasets/20140728-export.txt"
+datasetfile = "datasets/20140815-export.txt"
 diotime, diofreq = load_data(datasetfile)
 plt.close('all')
 (mu, sigma) = norm.fit(diofreq)
