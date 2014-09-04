@@ -7,7 +7,7 @@ from scipy.stats import ks_2samp
 
 
 
-datasetfile = "datasets/20140815-export.txt"
+datasetfile = "datasets/20140904-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
 print "Calculating ECDF of all values"

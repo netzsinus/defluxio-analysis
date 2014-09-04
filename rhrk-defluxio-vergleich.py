@@ -30,6 +30,6 @@ print "Mittelwert Defluxio:", np.mean(defluxio_freq)
 #plt.plot(lastweek_time, lastweek_freq, 'b', label="Letzte Woche (ITWM)")
 #plt.legend()
 
-
-
+plt.tight_layout()
+plt.savefig("images/rhrk-netzsinus-vergleich.png", bbox_inches='tight')
 plt.show()
