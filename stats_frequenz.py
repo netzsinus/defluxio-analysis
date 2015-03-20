@@ -24,7 +24,6 @@ lower_freq_limit = mu-3*sigma
 
 f, axarr = plt.subplots(2)
 plt.title("Netzfrequenz")
-
 axarr[0].set_title("Verlauf der Netzfrequenz")
 axarr[0].set_xlabel("Zeit")
 axarr[0].set_ylabel("Frequenz [Hz]")
