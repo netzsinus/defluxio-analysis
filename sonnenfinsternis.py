@@ -21,7 +21,7 @@ def add_freq_momentum(dataset):
   dataset = dataset.resample("1min")
   # http://docs.scipy.org/doc/numpy/reference/generated/numpy.ediff1d.html#numpy.ediff1d
   momentum = np.ediff1d(dataset.freq, to_end=np.array([0]))
-  #avgtimediff = np.mean(np.ediff1d(dataset.unix))
+  # Entso-E has published 19.5 GW/Hz
   dataset['momentum'] = momentum * 19500
   return dataset.dropna()
 
@@ -54,11 +54,11 @@ with pd.get_store(args.datafile) as store:
   f, ax = plt.subplots(2)
   friday_momentum_df = add_freq_momentum(fridaydata)
   eclipse_momentum_df = add_freq_momentum(eclipsedata)
-  lower_freq_limit = 49.95
-  upper_freq_limit = 50.05
+  lower_momentum_limit = np.min(friday_momentum_df.momentum)
+  upper_momentum_limit = np.max(friday_momentum_df.momentum)
   ax[0].set_xlabel("Zeit [Sekunden seit Mitternacht UTC]")
   ax[0].set_ylabel("Gradient [MW/min]")
-  #ax[0].set_ylim((lower_freq_limit, upper_freq_limit))
+  ax[0].set_ylim((lower_momentum_limit, upper_momentum_limit))
   #ax[0].set_xlim((np.min(eclipsedata.time), np.max(eclipsedata.time)))
   ax[0].plot(eclipse_momentum_df.s_since_midnight.astype(int),
       eclipse_momentum_df.momentum, 'b.', label="Momentum")
@@ -71,7 +71,7 @@ with pd.get_store(args.datafile) as store:
 
   ax[1].set_xlabel("Zeit [Sekunden seit Mitternacht UTC]")
   ax[1].set_ylabel("Gradient [MW/min]")
-  #ax[1].set_ylim((lower_freq_limit, upper_freq_limit))
+  ax[1].set_ylim((lower_momentum_limit, upper_momentum_limit))
   #ax[1].set_xlim((np.min(eclipsedata.time), np.max(eclipsedata.time)))
   ax[1].plot(friday_momentum_df.s_since_midnight.astype(int),
       friday_momentum_df.momentum, 'b.', label="Momentum")
