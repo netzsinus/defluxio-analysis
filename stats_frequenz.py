@@ -13,7 +13,7 @@ def load_data(filename):
   return time, data[:,1]
 
 #datasetfile = "datasets/20140728-export.txt"
-datasetfile = "datasets/20140815-export.txt"
+datasetfile = "datasets/20140904-export.txt"
 diotime, diofreq = load_data(datasetfile)
 plt.close('all')
 (mu, sigma) = norm.fit(diofreq)
