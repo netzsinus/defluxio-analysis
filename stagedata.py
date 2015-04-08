@@ -16,16 +16,19 @@ print "Slurping the CSV-file %s, writing to %s" % (args.datafile,
 print "Loading datasets. This might take a while."
 alldata = datatool.load_data_as_dataframe(args.datafile)
 
-print "Selecting all friday data for comparison."
-# select the friday 8:00 to 11:00 UTC datasets from the alldata frame
-fridays = alldata[alldata.weekday == 4]
-fridaydata = fridays[(fridays.hour > 7) & (fridays.hour < 11)]
+#print "Selecting all friday data for comparison."
+## select the friday 8:00 to 11:00 UTC datasets from the alldata frame
+fridaydata = alldata[(alldata.weekday == 4) & (fridays.hour > 7) & (fridays.hour < 11)]
 
 print "Selecting eclipse data"
 eclipsedata = alldata[(alldata.unix >= 1426838400) & (alldata.unix < 1426849200)]
 
+print "Selecting KKW Grundremmingen Schnellabschaltung 25.03.2015 data"
+grundremmingen = alldata[(alldata.unix >= 1427268300) & (alldata.unix < 1427269500)]
+
 with pd.get_store(args.outfile) as store:
   store['eclipsedata'] = eclipsedata
   store['fridaydata'] = fridaydata
+  store['grundremmingen'] = grundremmingen
 
 
