@@ -9,7 +9,7 @@ import freqanalysis.normdist as nd
 
 
 
-datasetfile = "datasets/20140815-export.txt"
+datasetfile = "datasets/20140904-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
 df['minute'] = df.time.apply(lambda x: x.minute)

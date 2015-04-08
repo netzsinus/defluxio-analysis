@@ -11,7 +11,7 @@ import pandas as pd
 import brewer2mpl as b2m
 import freqanalysis.datatools as datatool
 
-datasetfile = "datasets/20140815-export.txt"
+datasetfile = "datasets/20140904-export.txt"
 print "loading ", datasetfile
 df = datatool.load_data_as_dataframe(datasetfile)
 print df.head()
@@ -45,7 +45,7 @@ plt.ylim(0, 24*60*60)
 ylocs = np.arange(0, 24*60*60, 60*60)
 ylocs, ylabels = plt.yticks(ylocs, 
     map(lambda y: datatool.seconds_to_timeofday(y), ylocs))
-xlocs = np.arange(min_day, max_day+1, 1)
+xlocs = np.arange(min_day, max_day+1, 7)
 xlocs, xlabels = plt.xticks(xlocs,
     map(lambda x: x, xlocs))
     #verticalalignment = 'bottom')
