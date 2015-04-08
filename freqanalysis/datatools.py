@@ -11,6 +11,19 @@ def load_data_as_series(filename):
   time = [dt.datetime.fromtimestamp(ts) for ts in data[:,0]]
   return pd.Series(data[:,1], time)
 
+def unix2ts(unix):
+  # see http://stackoverflow.com/a/7065242
+  unaware = dt.datetime.utcfromtimestamp(unix)
+  return pytz.utc.localize(unaware)
+  #return dt.datetime.fromtimestamp(unix)
+  #return unaware.replace(tzinfo=pytz.UTC)
+
+def ts2time(timestamp):
+  return timestamp.time()
+
+def unix2time(unix):
+  return ts2time(unix2ts(unix))
+
 def load_data_as_dataframe(filename):
   datafile = open(filename)
   datafile.readline() # skip the header
