@@ -35,12 +35,11 @@ def add_freq_momentum(dataset):
   resampling_interval = 2
   dataset = dataset.set_index(pd.DatetimeIndex(dataset['ts']))
   dataset = dataset.resample("%ss" % resampling_interval)
-  #dataset['freq_sg'] = sig.savgol_filter(dataset['freq'], 7, 2)
   # http://docs.scipy.org/doc/numpy/reference/generated/numpy.ediff1d.html#numpy.ediff1d
   momentum = np.ediff1d(dataset.freq_sg, to_begin=np.array([0]))
-  # Entso-E has published 19.5 GW/Hz. We resampled to 3s -> need to
-  # correct to 60s data
-  dataset['momentum'] = momentum * 19500 * (60/resampling_interval)
+  # Entso-E has published 19.5 GW/Hz. We resampled to
+  # resampling_interval seconds -> need to correct to 60s data
+  dataset['momentum'] = momentum * 19500 / (resampling_interval/60.0)
   return dataset.dropna()
 
 with pd.get_store(args.datafile) as store:
