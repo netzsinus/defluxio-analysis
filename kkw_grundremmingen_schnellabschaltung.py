@@ -28,20 +28,19 @@ cmd_parser.add_argument("datafile", help="the HDF+ containing the frequency meas
 args = cmd_parser.parse_args()
 
 print "Reading from %s" % (args.datafile)
+
 # Calculate the momentum (1st order derivative) of the frequency data
 def add_freq_momentum(dataset):
   # First: Resample the dataset.
   resampling_interval = 2
   dataset = dataset.set_index(pd.DatetimeIndex(dataset['ts']))
   dataset = dataset.resample("%ss" % resampling_interval)
-  dataset['freq_sg'] = sig.savgol_filter(dataset['freq'], 7, 2)
+  #dataset['freq_sg'] = sig.savgol_filter(dataset['freq'], 7, 2)
   # http://docs.scipy.org/doc/numpy/reference/generated/numpy.ediff1d.html#numpy.ediff1d
   momentum = np.ediff1d(dataset.freq_sg, to_begin=np.array([0]))
   # Entso-E has published 19.5 GW/Hz. We resampled to 3s -> need to
   # correct to 60s data
   dataset['momentum'] = momentum * 19500 * (60/resampling_interval)
-  dataset['momentum_derivative'] = np.ediff1d(dataset['momentum'],
-      to_begin=np.array([0]))
   return dataset.dropna()
 
 with pd.get_store(args.datafile) as store:
