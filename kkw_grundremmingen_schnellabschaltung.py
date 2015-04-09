@@ -30,7 +30,7 @@ args = cmd_parser.parse_args()
 print "Reading from %s" % (args.datafile)
 
 # Calculate the momentum (1st order derivative) of the frequency data
-def add_freq_momentum(dataset):
+def resample_add_freq_momentum(dataset):
   # First: Resample the dataset.
   resampling_interval = 2
   dataset = dataset.set_index(pd.DatetimeIndex(dataset['ts']))
@@ -99,7 +99,7 @@ with pd.get_store(args.datafile) as store:
 
   print "Drawing momentum graph"
   f, ax = plt.subplots(2)
-  grundremmingen_momentum_df = add_freq_momentum(grundremmingen)
+  grundremmingen_momentum_df = resample_add_freq_momentum(grundremmingen)
   lower_momentum_limit = np.min(grundremmingen_momentum_df.momentum)
   upper_momentum_limit = np.max(grundremmingen_momentum_df.momentum)
 
