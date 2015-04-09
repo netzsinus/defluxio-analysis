@@ -3,6 +3,7 @@ import freqanalysis.datatools as datatool
 import numpy as np
 import sys as sys
 import argparse
+import scipy.signal as sig
 import os
 
 cmd_parser = argparse.ArgumentParser()
