@@ -3,7 +3,6 @@ import freqanalysis.datatools as datatool
 import numpy as np
 import sys as sys
 import argparse
-import scipy.signal as sig
 import os
 
 cmd_parser = argparse.ArgumentParser()
@@ -16,8 +15,6 @@ print "Slurping the CSV-file %s, writing to %s" % (args.datafile,
 
 print "Loading datasets. This might take a while."
 alldata = datatool.load_data_as_dataframe(args.datafile)
-print "Computing Savitzky-Golay Filter (windowlen=7, polyorder=2)"
-alldata['freq_sg'] = sig.savgol_filter(alldata['freq'], 7, 2)
 
 #print "Selecting all friday data for comparison."
 ## select the friday 8:00 to 11:00 UTC datasets from the alldata frame

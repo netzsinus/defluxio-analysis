@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.signal as sig
 import datetime as dt
 import time as t
 import pandas as pd
@@ -47,6 +48,8 @@ def load_data_as_dataframe(filename):
   retval['d_since_start'] = ((retval['unix'] - (min_unix -
     daystart_offset) ) / (60*60*24)).astype(int)
   retval['s_since_midnight'] = [ c % (60*60*24) for c in retval['unix'] ]
+  print "Computing Savitzky-Golay Filter (windowlen=7, polyorder=2)"
+  retval['freq_sg'] = sig.savgol_filter(retval['freq'], 7, 2)
   return retval
 
 # See UCTE Handbook Appendix 1, p. 20f: https://www.entsoe.eu/fileadmin/user_upload/_library/publications/entsoe/Operation_Handbook/Policy_1_Appendix%20_final.pdf
