@@ -46,5 +46,6 @@ with pd.get_store(args.outfile) as store:
   store['eclipsedata'] = eclipsedata
   store['fridaydata'] = fridaydata
   store['grundremmingen'] = grundremmingen
+  store['alldata'] = alldata
 
 
