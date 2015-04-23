@@ -3,18 +3,33 @@ import freqanalysis.datatools as datatool
 import numpy as np
 import sys as sys
 import argparse
+# pip install progressbar2
+import progressbar as pb
 import os
 
 cmd_parser = argparse.ArgumentParser()
-cmd_parser.add_argument("datafile", help="the csv containing the frequency measurements")
+cmd_parser.add_argument("datadir", help="directory containing the frequency measurements (i.e. YYYYMMDD.txt files)")
 cmd_parser.add_argument("outfile", help="HDF+ file to create")
 args = cmd_parser.parse_args()
 
-print "Slurping the CSV-file %s, writing to %s" % (args.datafile,
+print "Slurping data from %s, writing to %s" % (args.datadir,
     args.outfile)
+files = sorted(os.listdir(args.datadir))
 
 print "Loading datasets. This might take a while."
-alldata = datatool.load_data_as_dataframe(args.datafile)
+alldata = None
+with pb.ProgressBar(maxval=len(files)) as progress:
+  for idx, file in enumerate(files):
+    newdata = datatool.load_data_as_dataframe(os.path.join(args.datadir, file))
+    if idx == 0:
+      alldata = newdata
+    else:
+      alldata = alldata.append(newdata, ignore_index=True)
+    progress.update(idx)
+print "Finished reading data into memory."
+
+print "Computing Savitzky-Golay Filter (windowlen=7, polyorder=2)"
+alldata = datatool.addSavitzkyGolay(alldata)
 
 #print "Selecting all friday data for comparison."
 ## select the friday 8:00 to 11:00 UTC datasets from the alldata frame
