@@ -25,9 +25,12 @@ def ts2time(timestamp):
 def unix2time(unix):
   return ts2time(unix2ts(unix))
 
+def addSavitzkyGolay(dataframe):
+  dataframe['freq_sg'] = sig.savgol_filter(dataframe['freq'], 7, 2)
+  return dataframe
+
 def load_data_as_dataframe(filename):
   datafile = open(filename)
-  datafile.readline() # skip the header
   data = np.loadtxt(datafile)
   #data[:,0] = pd.to_datetime(data[:,0])
   #time = [dt.datetime.fromtimestamp(ts) for ts in data[:,0]]
@@ -48,8 +51,6 @@ def load_data_as_dataframe(filename):
   retval['d_since_start'] = ((retval['unix'] - (min_unix -
     daystart_offset) ) / (60*60*24)).astype(int)
   retval['s_since_midnight'] = [ c % (60*60*24) for c in retval['unix'] ]
-  print "Computing Savitzky-Golay Filter (windowlen=7, polyorder=2)"
-  retval['freq_sg'] = sig.savgol_filter(retval['freq'], 7, 2)
   return retval
 
 # See UCTE Handbook Appendix 1, p. 20f: https://www.entsoe.eu/fileadmin/user_upload/_library/publications/entsoe/Operation_Handbook/Policy_1_Appendix%20_final.pdf
