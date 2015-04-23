@@ -1,4 +1,6 @@
 images/*
+datasets/*.txt
+datasets/data.netzsin.us
 *.pyc
 *.h5
 .DS_Store
