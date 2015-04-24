@@ -39,6 +39,9 @@ fridaydata = alldata[(alldata.weekday == 4) & (alldata.hour > 7) &
 print "Selecting eclipse data"
 eclipsedata = alldata[(alldata.unix >= 1426838400) & (alldata.unix < 1426849200)]
 
+print "Selecting Amsterdam blackout data"
+amsterdam = alldata[(alldata.unix >= 1427445400) & (alldata.unix < 1427455400)]
+
 print "Selecting KKW Grundremmingen Schnellabschaltung 25.03.2015 data"
 grundremmingen = alldata[(alldata.unix >= 1427268780) & (alldata.unix < 1427269200)]
 
@@ -46,6 +49,6 @@ with pd.get_store(args.outfile) as store:
   store['eclipsedata'] = eclipsedata
   store['fridaydata'] = fridaydata
   store['grundremmingen'] = grundremmingen
-  store['alldata'] = alldata
+  store['amsterdam'] = amsterdam
 
 
