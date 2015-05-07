@@ -29,6 +29,9 @@ def addSavitzkyGolay(dataframe):
   dataframe['freq_sg'] = sig.savgol_filter(dataframe['freq'], 7, 2)
   return dataframe
 
+def secs_per_day():
+  return 24*60*60
+
 def load_data_as_dataframe(filename):
   datafile = open(filename)
   data = np.loadtxt(datafile)
