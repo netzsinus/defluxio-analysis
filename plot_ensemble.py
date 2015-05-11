@@ -13,21 +13,32 @@ args = cmd_parser.parse_args()
 
 print "Slurping data from %s" % (args.datafile)
 with pd.get_store(args.datafile) as store:
-  ensemble_df = store['ensemble']
+  ensemble_all_df = store['ensemble_all']
+  ensemble_weekday_df = store['ensemble_weekday']
+  ensemble_weekend_df = store['ensemble_weekend']
   print "Calculating Savitzky-Golay filter (2nd degree polynom, window length 7)"
-  datatool.addSavitzkyGolay(ensemble_df)
+  datatool.addSavitzkyGolay(ensemble_all_df)
+  datatool.addSavitzkyGolay(ensemble_weekday_df)
+  datatool.addSavitzkyGolay(ensemble_weekend_df)
   print "Drawing"
-  mintime = np.min(ensemble_df['s_since_midnight'])
-  maxtime = np.max(ensemble_df['s_since_midnight'])
-  plt.title("Ensemble-Statistik der Netzfrequenz")
+  mintime = np.min(ensemble_all_df['s_since_midnight'])
+  maxtime = np.max(ensemble_all_df['s_since_midnight'])
+  plt.title("Ensemble der Netzfrequenz")
   plt.xlabel("Zeit [UTC]")
   plt.ylabel("Frequenz [Hz]")
-  plt.plot(ensemble_df.s_since_midnight, ensemble_df.freq_sg, 'b')
+  #plt.plot(ensemble_all_df.s_since_midnight,
+  #    ensemble_all_df.freq_sg, 'k', label="Alle Tage")
+  plt.plot(ensemble_weekday_df.s_since_midnight,
+      ensemble_weekday_df.freq_sg, 'b', label="Wochentag")
+  plt.plot(ensemble_weekend_df.s_since_midnight,
+      ensemble_weekend_df.freq_sg, 'r', label="Wochenende")
   xlocs = np.arange(mintime, maxtime, 60*60)
   xlocs, xlabels = plt.xticks(xlocs, 
         map(lambda x: datatool.seconds_to_timeofday(x), xlocs))
   plt.setp(xlabels, rotation=45)
   plt.grid(True, which='both')
+  plt.legend(loc="best", fontsize="small")
+
   plt.xlim(0, 60*60*24-1)
  
 

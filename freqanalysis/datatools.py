@@ -76,7 +76,18 @@ def calc_trumpet_curve(starttime, f0, f1, df2, dPa):
     'trumppos': trumpetpos,
     })
 
-
+# Calculate the momentum (1st order derivative) of the frequency data
+def resample_add_freq_momentum(dataset, network_load):
+  # First: Resample the dataset.
+  resampling_interval = 2
+  dataset = dataset.set_index(pd.DatetimeIndex(dataset['ts']))
+  dataset = dataset.resample("%ss" % resampling_interval)
+  # http://docs.scipy.org/doc/numpy/reference/generated/numpy.ediff1d.html#numpy.ediff1d
+  momentum = np.ediff1d(dataset.freq_sg, to_begin=np.array([0]))
+  # Entso-E has published 19.5 GW/Hz. We resampled to
+  # resampling_interval seconds -> need to correct to 60s data
+  dataset['momentum'] = momentum * network_load / (resampling_interval/60.0)
+  return dataset.dropna()
 
 # Helper: convert seconds of day to HH:MM formatted string
 def seconds_to_timeofday(timestamp):
