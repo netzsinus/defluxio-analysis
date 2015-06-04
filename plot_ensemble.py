@@ -21,6 +21,8 @@ with pd.get_store(args.datafile) as store:
   datatool.addSavitzkyGolay(ensemble_weekday_df)
   datatool.addSavitzkyGolay(ensemble_weekend_df)
   print "Drawing"
+  
+  fig = plt.figure(figsize=(16, 9), dpi=75)
   mintime = np.min(ensemble_all_df['s_since_midnight'])
   maxtime = np.max(ensemble_all_df['s_since_midnight'])
   plt.title("Ensemble der Netzfrequenz")
@@ -37,7 +39,7 @@ with pd.get_store(args.datafile) as store:
         map(lambda x: datatool.seconds_to_timeofday(x), xlocs))
   plt.setp(xlabels, rotation=45)
   plt.grid(True, which='both')
-  plt.legend(loc="best", fontsize="small")
+  plt.legend(loc="best")
 
   plt.xlim(0, 60*60*24-1)
  
