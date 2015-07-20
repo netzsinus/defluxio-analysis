@@ -9,12 +9,16 @@ import os
 
 cmd_parser = argparse.ArgumentParser()
 cmd_parser.add_argument("datadir", help="directory containing the frequency measurements (i.e. YYYYMMDD.txt files)")
+cmd_parser.add_argument("-a", "--alldata", help="Copy all data into the HDF+ file (default: off)", action="store_true")
 cmd_parser.add_argument("outfile", help="HDF+ file to create")
 args = cmd_parser.parse_args()
 
 print "Slurping data from %s, writing to %s" % (args.datadir,
     args.outfile)
 files = sorted(os.listdir(args.datadir))
+
+if args.alldata:
+  print "Note: will export all records."
 
 print "Loading datasets. This might take a while."
 alldata = None
@@ -50,5 +54,8 @@ with pd.get_store(args.outfile) as store:
   store['fridaydata'] = fridaydata
   store['grundremmingen'] = grundremmingen
   store['amsterdam'] = amsterdam
+  if args.alldata:
+    print "Storing also all records into the data file"
+    store['alldata'] = alldata
 
 
