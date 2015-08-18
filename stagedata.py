@@ -1,3 +1,4 @@
+ # -*- coding: utf8 -*-
 import pandas as pd
 import freqanalysis.datatools as datatool
 import numpy as np
@@ -49,11 +50,16 @@ amsterdam = alldata[(alldata.unix >= 1427445400) & (alldata.unix < 1427455400)]
 print "Selecting KKW Grundremmingen Schnellabschaltung 25.03.2015 data"
 grundremmingen = alldata[(alldata.unix >= 1427268780) & (alldata.unix < 1427269200)]
 
+print u"Selecting KKW Mühleberg Schnellabschaltung 06.07.2015 data"
+muehleberg = alldata[(alldata.unix >= 1436173380 - 3*60) &
+    (alldata.unix < 1436173380+ 10*60)]
+
 with pd.get_store(args.outfile) as store:
   store['eclipsedata'] = eclipsedata
   store['fridaydata'] = fridaydata
   store['grundremmingen'] = grundremmingen
   store['amsterdam'] = amsterdam
+  store['muehleberg'] = muehleberg
   if args.alldata:
     print "Storing also all records into the data file"
     store['alldata'] = alldata
