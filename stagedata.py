@@ -50,7 +50,7 @@ amsterdam = alldata[(alldata.unix >= 1427445400) & (alldata.unix < 1427455400)]
 print "Selecting KKW Grundremmingen Schnellabschaltung 25.03.2015 data"
 grundremmingen = alldata[(alldata.unix >= 1427268780) & (alldata.unix < 1427269200)]
 
-print u"Selecting KKW Mühleberg Schnellabschaltung 06.07.2015 data"
+print u"Selecting KKW Muehleberg Schnellabschaltung 06.07.2015 data"
 muehleberg = alldata[(alldata.unix >= 1436173380 - 2*60) &
     (alldata.unix < 1436173380+ 3*60)]
 
