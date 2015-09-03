@@ -74,9 +74,9 @@ with pd.get_store(args.datafile) as store:
   ax.yaxis.set_major_formatter(y_formatter)
   ax.grid(True)
 
-  f.suptitle(r"Schnellabschaltung KKW Grundremmingen 25.03.2015, $\Delta P_a = -1290MW$")
+  f.suptitle(r"Schnellabschaltung KKW Gundremmingen 25.03.2015, $\Delta P_a = -1290MW$")
   f.autofmt_xdate()
-  plt.savefig("images/grundremmingen-frequenzverlauf.png")#, bbox_inches='tight')
+  plt.savefig("images/gundremmingen-frequenzverlauf.png")#, bbox_inches='tight')
   plt.clf()
 
   print "Drawing momentum graph"
@@ -114,8 +114,8 @@ with pd.get_store(args.datafile) as store:
   ax[1].yaxis.set_major_formatter(y_formatter)
   ax[1].grid(True)
 
-  f.suptitle("Schnellabschaltung KKW Grundremmingen 25.03.2015 - Leistungsgradienten")
+  f.suptitle("Schnellabschaltung KKW Gundremmingen 25.03.2015 - Leistungsgradienten")
   f.autofmt_xdate()
-  plt.savefig("images/grundremmingen-gradienten.png")#, bbox_inches='tight')
+  plt.savefig("images/gundremmingen-gradienten.png")#, bbox_inches='tight')
 
 
