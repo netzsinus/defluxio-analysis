@@ -51,8 +51,6 @@ with pd.get_store(args.datafile) as store:
   trumpet = datatool.calc_trumpet_curve(starttime, setfreq, startfreq, bottomfreq
       - startfreq, delta_Pa)
   ax.plot(trumpet.time, trumpet.trumpneg, 'r', label=r"Trompetenkurve")
-  half_trumpet = 50 - (50-trumpet.trumpneg) / 2.0
-  ax.plot(trumpet.time, half_trumpet, 'y', label=r"$50\%$ Trompetenkurve")
   ax.plot(ax.get_xlim(), (setfreq, setfreq), 'b--', label=r"Sollwert $f_0 = 50Hz$")
 
   print "Beginn der Schnellabschaltung um %s bei %.3f Hz" % (datatool.unix2time(starttime), startfreq)
