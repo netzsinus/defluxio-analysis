@@ -17,7 +17,7 @@ print "Slurping data from %s" % (args.datafile)
 with pd.get_store(args.datafile) as store:
   ensemble = store['ensemble']
   
-  min_quantile = 0.0005
+  min_quantile = 0.005
   max_quantile = 0.9999
   quantiles = ensemble.quantile([min_quantile, max_quantile])
   print "Quantiles are:"

@@ -2,6 +2,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 import matplotlib.cm as cm
+from matplotlib.ticker import AutoMinorLocator
+import matplotlib.patches as patches
 import matplotlib as mpl
 import numpy as np
 import pandas as pd
@@ -31,9 +33,11 @@ def add_freq_momentum(dataset):
 with pd.get_store(args.datafile) as store:
   eclipsedata = store['eclipsedata']
   fridaydata = store['fridaydata']
+  ensemble = store['ensemble']
+  print eclipsedata.head()
 
   print "Drawing solar eclipse frequency overview"
-  f, ax = plt.subplots()
+  f, ax = plt.subplots(figsize=(16, 9), dpi=75)
   lower_freq_limit = 49.95
   upper_freq_limit = 50.05
   ax.set_xlabel("Zeit [UTC]")
@@ -53,9 +57,49 @@ with pd.get_store(args.datafile) as store:
   f.autofmt_xdate()
   plt.savefig("images/sonnenfinsternis-frequenzverlauf.png")#, bbox_inches='tight')
 
-  plt.clf()
 
-  f, ax = plt.subplots(2)
+  print "Drawing solar eclipse frequency comparison"
+  plt.clf()
+  f, ax = plt.subplots(figsize=(16, 9), dpi=75)
+  eclipsestart = np.min(eclipsedata.s_since_midnight)
+  eclipseend = np.max(eclipsedata.s_since_midnight)
+  ensemble = ensemble[(ensemble.index >= eclipsestart) & 
+      (ensemble.index <= eclipseend)]
+  ax.set_xlabel("Zeit [UTC]")
+  ax.set_ylabel("Frequenz [Hz]")
+  #ax.set_xlim((eclipsestart, eclipseend))
+  ts = pd.to_datetime(eclipsedata.s_since_midnight, unit='s')
+  ax.plot(ts, eclipsedata.freq, 'b', label="Netzfrequenz Sonnenfinsternis")
+  ts = pd.to_datetime(ensemble.index.to_series(), unit='s')
+  ax.plot(ts, ensemble['freq','mean'], 'r', label="Mittlere Netzfrequenz")
+
+  ax.add_patch(
+      patches.Rectangle(
+          (eclipsestart, 49.98),   # (x,y)
+          eclipseend-eclipsestart,          # width
+          0.04,          # height
+      )
+  )
+
+  #ax.plot(ax.get_xlim(), (50.0, 50.0), 'r-', label="Sollwert")
+  ax.legend()
+# format the ticks & enable the grid
+  #hours = dates.HourLocator()
+  #minutes   = dates.MinuteLocator()
+  #hoursFmt = dates.DateFormatter('%H:%M')
+  #ax.xaxis.set_major_locator(hours)
+  #ax.xaxis.set_major_formatter(hoursFmt)
+  #ax.xaxis.set_minor_locator(minutes)
+
+  y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+  ax.yaxis.set_major_formatter(y_formatter)
+  ax.grid(True, which='both')
+
+  f.suptitle("Sonnenfinsternis am 20.03.2015")
+  plt.savefig("images/sonnenfinsternis-frequenzverlauf-vergleich.png")#, bbox_inches='tight')
+
+  plt.clf()
+  f, ax = plt.subplots(2, figsize=(16, 9), dpi=75)
   friday_momentum_df = add_freq_momentum(fridaydata)
   eclipse_momentum_df = add_freq_momentum(eclipsedata)
   lower_momentum_limit = np.min(friday_momentum_df.momentum)
