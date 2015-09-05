@@ -34,7 +34,12 @@ with pd.get_store(args.datafile) as store:
   eclipsedata = store['eclipsedata']
   fridaydata = store['fridaydata']
   ensemble = store['ensemble']
-  print eclipsedata.head()
+  ensemble_momentum = store['ensemble_momentum']
+  friday_momentum_df = add_freq_momentum(fridaydata)
+  eclipse_momentum_df = add_freq_momentum(eclipsedata)
+  #TODO: The structure of the ensemble is different. Needs to be
+  #adjusted.
+  #ensemble_momentum_df = add_freq_momentum(ensemble)
 
   print "Drawing solar eclipse frequency overview"
   f, ax = plt.subplots(figsize=(16, 9), dpi=75)
@@ -100,8 +105,6 @@ with pd.get_store(args.datafile) as store:
 
   plt.clf()
   f, ax = plt.subplots(2, figsize=(16, 9), dpi=75)
-  friday_momentum_df = add_freq_momentum(fridaydata)
-  eclipse_momentum_df = add_freq_momentum(eclipsedata)
   lower_momentum_limit = np.min(friday_momentum_df.momentum)
   upper_momentum_limit = np.max(friday_momentum_df.momentum)
   ax[0].set_xlabel("Zeit [Sekunden seit Mitternacht UTC]")
@@ -135,6 +138,71 @@ with pd.get_store(args.datafile) as store:
   f.suptitle("Sonnenfinsternis am 20.03.2015 - Leistungsgradienten")
   f.autofmt_xdate()
   plt.savefig("images/sonnenfinsternis-gradienten.png")#, bbox_inches='tight')
+
+  plt.clf()
+  f, ax = plt.subplots(1, figsize=(16, 9), dpi=75)
+  lower_momentum_limit = np.min(eclipse_momentum_df.momentum)
+  upper_momentum_limit = np.max(eclipse_momentum_df.momentum)
+  mintime = np.min(eclipse_momentum_df.s_since_midnight.astype(int))
+  maxtime = np.max(eclipse_momentum_df.s_since_midnight.astype(int))
+  ax.set_xlabel("Zeit [Sekunden seit Mitternacht UTC]")
+  ax.set_ylabel("Gradient [MW/min]")
+  ax.set_ylim((lower_momentum_limit, upper_momentum_limit))
+  ax.set_xlim((mintime, maxtime))
+  ax.plot(ensemble_momentum.s_since_midnight.astype(int),
+      ensemble_momentum.momentum, 'r', linewidth=2,
+      label="Ensemble-Leistungsgradient")
+  ax.plot(eclipse_momentum_df.s_since_midnight.astype(int),
+    eclipse_momentum_df.momentum, 'b-', label="Leistungsgradient SoFi", linewidth=2)
+  ax.legend()
+  #hfmt = dates.DateFormatter('%H:%M')
+  #ax[0].xaxis.set_major_formatter(hfmt)
+  y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+  ax.yaxis.set_major_formatter(y_formatter)
+  ax.grid(True)
+  f.suptitle("Sonnenfinsternis am 20.03.2015 - Leistungsgradienten")
+  f.autofmt_xdate()
+  plt.savefig("images/sonnenfinsternis-ensemble-gradienten.png", bbox_inches='tight')
+
+
+  plt.clf()
+  f, ax = plt.subplots(2, figsize=(16, 9), dpi=75)
+  lower_momentum_limit = np.min(ensemble_momentum.momentum)
+  upper_momentum_limit = np.max(ensemble_momentum.momentum)
+  mintime = np.min(eclipse_momentum_df.s_since_midnight.astype(int))
+  maxtime = np.max(eclipse_momentum_df.s_since_midnight.astype(int))
+  ax[0].set_xlabel("Zeit [Sekunden seit Mitternacht UTC]")
+  ax[0].set_ylabel("Gradient [MW/min]")
+  ax[0].set_ylim((lower_momentum_limit, upper_momentum_limit))
+  ax[0].set_xlim((mintime, maxtime))
+  ax[0].plot(eclipse_momentum_df.s_since_midnight.astype(int),
+      eclipse_momentum_df.momentum, 'b-', label="Leistungsgradient SoFi")
+  ax[0].legend()
+  #hfmt = dates.DateFormatter('%H:%M')
+  #ax[0].xaxis.set_major_formatter(hfmt)
+  y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+  ax[0].yaxis.set_major_formatter(y_formatter)
+  ax[0].grid(True)
+
+  ax[1].set_xlabel("Zeit [Sekunden seit Mitternacht UTC]")
+  ax[1].set_ylabel("Gradient [MW/min]")
+  ax[1].set_ylim((lower_momentum_limit, upper_momentum_limit))
+  ax[1].set_xlim((mintime, maxtime))
+  ax[1].plot(ensemble_momentum.s_since_midnight.astype(int),
+      ensemble_momentum.momentum, 'k',
+      label="Ensemble-Leistungsgradient")
+  ax[1].legend()
+  #hfmt = dates.DateFormatter('%H:%M')
+  #ax[1].xaxis.set_major_formatter(hfmt)
+  y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+  ax[1].yaxis.set_major_formatter(y_formatter)
+  ax[1].grid(True)
+
+  f.suptitle("Sonnenfinsternis am 20.03.2015 - Leistungsgradienten")
+  f.autofmt_xdate()
+  plt.savefig("images/sonnenfinsternis-ensemble-gradienten2.png")#, bbox_inches='tight')
+
+
 
   plt.clf()
   lower_freq_limit = 49.95

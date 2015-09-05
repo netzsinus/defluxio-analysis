@@ -16,6 +16,7 @@ args = cmd_parser.parse_args()
 print "Slurping data from %s" % (args.datafile)
 with pd.get_store(args.datafile) as store:
   ensemble = store['ensemble']
+  ensemble_momentum = store['ensemble_momentum']
   
   min_quantile = 0.005
   max_quantile = 0.9999
@@ -59,6 +60,28 @@ with pd.get_store(args.datafile) as store:
   plt.tight_layout()
   plt.savefig("images/frequenz-ensemble2.png", bbox_inches='tight')
 
+  print "Drawing momentum overview"
+  fig, ax = plt.subplots(figsize=(16, 9), dpi=75)
+  ax.set_title("Ensemble der Netzfrequenz - Leistungsgradienten")
+  ax.set_xlabel("Stunde [UTC]")
+  ax.set_ylabel("Leistungsgradient [MW/min]")
+  # format the ticks & enable the grid
+  hours = mdates.HourLocator()
+  minutes   = mdates.MinuteLocator()
+  hoursFmt = mdates.DateFormatter('%H')
+  ax.xaxis.set_major_locator(hours)
+  ax.xaxis.set_major_formatter(hoursFmt)
+  ax.xaxis.set_minor_locator(minutes)
+  ax.grid(True, which='both')
+  # reconstruct the time index
+  print ensemble_momentum
+  ts = pd.to_datetime(ensemble_momentum.index, unit='m')
+  ax.plot(ts, ensemble_momentum['momentum'], 'k',
+      label="Mittlerer Leistungsgradient")
+  ax.legend(loc="best")
+  plt.tight_layout()
+  plt.savefig("images/frequenz-ensemble2-momentum.png", bbox_inches='tight')
+
   print "Drawing evening subplot overview"
   mintime = 18*60*60
   maxtime = 23*60*60
@@ -95,3 +118,4 @@ with pd.get_store(args.datafile) as store:
   plt.tight_layout()
   plt.savefig("images/frequenz-ensemble-evening.png", bbox_inches='tight')
 
+  

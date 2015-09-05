@@ -37,7 +37,7 @@ with pd.get_store(args.datafile) as store:
   #    (grundremmingen.unix < 1427269200)]
 
   print "Drawing Schnellabschaltung overview"
-  f, ax = plt.subplots()
+  f, ax = plt.subplots(figsize=(16, 9), dpi=75)
   lower_freq_limit = 49.94
   upper_freq_limit = 50.025
   ax.set_xlabel("Zeit [UTC]")
@@ -74,11 +74,12 @@ with pd.get_store(args.datafile) as store:
 
   f.suptitle(r"Schnellabschaltung KKW Gundremmingen 25.03.2015, $\Delta P_a = -1290MW$")
   f.autofmt_xdate()
-  plt.savefig("images/gundremmingen-frequenzverlauf.png")#, bbox_inches='tight')
+  plt.savefig("images/gundremmingen-frequenzverlauf.png", bbox_inches='tight')
   plt.clf()
 
   print "Drawing momentum graph"
-  f, ax = plt.subplots(2)
+  #fig, ax = plt.subplots(figsize=(16, 9), dpi=75)
+  fig, ax = plt.subplots(2, figsize=(16, 9), dpi=75)
   grundremmingen_momentum_df = datatool.resample_add_freq_momentum(grundremmingen, 19000)
   lower_momentum_limit = np.min(grundremmingen_momentum_df.momentum)
   upper_momentum_limit = np.max(grundremmingen_momentum_df.momentum)
@@ -114,6 +115,6 @@ with pd.get_store(args.datafile) as store:
 
   f.suptitle("Schnellabschaltung KKW Gundremmingen 25.03.2015 - Leistungsgradienten")
   f.autofmt_xdate()
-  plt.savefig("images/gundremmingen-gradienten.png")#, bbox_inches='tight')
+  plt.savefig("images/gundremmingen-gradienten.png", bbox_inches='tight')
 
 
